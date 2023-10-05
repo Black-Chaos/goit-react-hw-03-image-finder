@@ -1,9 +1,8 @@
-import { Component } from 'react';
 import { PixabayAPI } from 'API/PixabayAPI';
-import { Searchbar } from 'components/Searchbar/Searchbar';
-import { ImageGallery } from 'components/ImageGallery/ImageGallery';
-import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Button } from 'components/Button/Button';
+import { ImageGallery } from 'components/ImageGallery/ImageGallery';
+import { Searchbar } from 'components/Searchbar/Searchbar';
+import { Component } from 'react';
 import { MagnifyingGlass } from 'react-loader-spinner';
 
 const pixApi = new PixabayAPI();
@@ -18,6 +17,11 @@ export class App extends Component {
     imgs: [],
     loading: false,
   };
+
+  componentDidMount() {
+    this.getImages()
+  }
+  
   search = q => {
     pixApi.setParams({ q });
     this.setState({
@@ -46,21 +50,13 @@ export class App extends Component {
 
   render() {
     const { imgs, loading } = this.state;
+    const result = Boolean(imgs.length);
 
     return (
       <div className="App">
         <Searchbar onSubmit={this.search} />
-        <ImageGallery>
-          {imgs.map(({ id, webformatURL, largeImageURL, tags }) => (
-            <ImageGalleryItem
-              key={id}
-              link={webformatURL}
-              bigImg={largeImageURL}
-              tags={tags}
-            />
-          ))}
-        </ImageGallery>
-        {imgs.length ? <Button handleClack={this.getImages} /> : false}
+        {result ? <ImageGallery images={ imgs} /> : <p className='message'>No result</p>}
+        {result && <Button handleClack={this.getImages} />}
         {loading && (
           <div className="Overlay">
             <MagnifyingGlass
