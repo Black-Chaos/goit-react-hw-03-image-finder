@@ -23,7 +23,7 @@ export class App extends Component {
   }
   
   search = q => {
-    pixApi.setParams({ q });
+    pixApi.setSearchQuestion(q);
     this.setState({
       imgs: [],
     });
