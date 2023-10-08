@@ -24,7 +24,7 @@ export class PixabayAPI {
   }
 
   currentPage() {
-    return this.config.params.page;
+    return this.config.params.page -1;
   }
 
   setSearchQuestion(q) {

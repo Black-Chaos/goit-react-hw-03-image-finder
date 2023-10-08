@@ -16,21 +16,24 @@ export class App extends Component {
   state = {
     imgs: [],
     loading: false,
-    page: 1
+    q: '',
+    page: 1,
   };
 
   componentDidUpdate(_, s) {
-    if (s.page !== this.state.page && this.state.page !== 1) return this.getImages()
+    const { q, page } = this.state;
+
+    if (s.q !== q) {
+      pixApi.setSearchQuestion(q);
+      this.setState({
+        imgs: [],
+        page: 1,
+      });
+      this.getImages();
+    }
+
+     if (s.page !== page && page !== 1) this.getImages();
   }
-  
-  search = q => {
-    pixApi.setSearchQuestion(q);
-    this.setState({
-      imgs: [],
-      page: 1,
-    });
-    this.getImages();
-  };
 
   getImages = async () => {
     this.setState({
@@ -56,9 +59,13 @@ export class App extends Component {
 
     return (
       <div className="App">
-        <Searchbar onSubmit={this.search} />
-        {result ? <ImageGallery images={ imgs} /> : <p className='message'>No result</p>}
-        {result && <Button handleClack={() => this.setState((s) => ({page: s.page +1}))} />}
+        <Searchbar onSubmit={q => this.setState({ q })} />
+        {result ? (
+          <ImageGallery images={imgs} />
+        ) : (
+          <p className="message">No result</p>
+        )}
+        {result && <Button handleClack={() => this.setState({page: pixApi.currentPage() + 1})} />}
         {loading && (
           <div className="Overlay">
             <MagnifyingGlass
