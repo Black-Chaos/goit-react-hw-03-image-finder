@@ -1,3 +1,3 @@
-export function Button({handleClack}) {
-    return <button className="Button" type="button" onClick={handleClack}>Load more</button>
+export function Button({handleClick}) {
+    return <button className="Button" type="button" onClick={handleClick}>Load more</button>
 }
